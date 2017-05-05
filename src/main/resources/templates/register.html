@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Title</title>
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+    <!-- Custom CSS -->
+    <!--<link th:href="@{/css/half-slider.css}" rel="stylesheet"/>-->
+    <link th:href="@{/css/navbar.css}" rel="stylesheet"/>
+
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/register-login.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="navbar::navbar"></nav>
+
+<!-- Half Page Image Background Carousel Header -->
+
+<header th:replace="form-fragments::register-head"></header>
+<footer th:replace="home::home-foot"></footer>
+<!-- Page Content -->
+<!-- /.container -->
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script>
+    $(".my-error").focusout(function () {
+        $(this).next('.invalid-input').remove();
+    });
+    $(".my-error").click(function () {
+        $(this).removeClass("my-error");
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title>2 Col Portfolio - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link href="css/profile.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/navbar.css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<nav th:replace="navbar::navbar"></nav>
+
+<div id="wrapper" class="profile-conetent toggled">
+
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li>
+                <a class="side-anch side-active" href="#profile">My Profile</a>
+            </li>
+            <li>
+                <a class="side-anch" href="#changepswrd">Change Password</a>
+            </li>
+            <li>
+                <a class="side-anch" href="#cars">My Cars</a>
+            </li>
+            <li>
+                <a class="side-anch" href="#repairs">My Repairs</a>
+            </li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="side-anch" href="#admin">Admin</a>
+            </li>
+            <li sec:authorize="hasRole('ROLE_MECHANIC')">
+                <a class="side-anch" href="#mechanic">Mechanic</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="jumbotron">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<footer th:replace="home::home-foot"></footer>
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+
+<script>
+    $(function () {
+        activateSide($('a.side-active'));
+    })
+
+    $('a.side-anch').click(function (e) {
+        if (!$(this).hasClass('side-active'))
+            activateSide($(this));
+        e.preventDefault();
+    })
+
+    function activateSide(el) {
+        $('a.side-active').removeClass('side-active');
+        $(el).addClass('side-active');
+        switch ($(el).attr('href')) {
+            case '#profile':
+                loadJSONProfile();
+                break;
+            case '#changepswrd':
+                loadDOMChangePassword();
+                break;
+            case'#repairs':
+                loadUserRepairs();
+                break;
+            case '#admin':
+                loadAdmin();
+                break;
+            case '#mechanic':
+                loadMechanic();
+                break;
+            default:
+//                $('div.jumbotron').append('<h1>'+ $(el).attr('href')+'</h1>');
+                $('div.jumbotron').fadeOut('fast', function () {
+                    $('div.jumbotron').empty().append('<h1>' + $(el).attr('href') + '</h1>');
+                    $('div.jumbotron').fadeIn('fast');
+                })
+        }
+    }
+
+
+    function loadMechanic() {
+        $('div.jumbotron').fadeOut('fast', function () {
+            $('div.jumbotron').empty()
+                .append('<div id="admin-btns" class="container btn-container"></div>');
+
+            $('div.btn-container')
+                .append($('<input/>')
+                    .attr('type', 'button')
+                    .attr('id', 'new-repair')
+                    .attr('value', 'New repair')
+                    .attr('onclick', 'activateNewRepair(this)')
+                    .addClass('btn btn-success admin-btn'))
+                .append($('<input/>')
+                    .attr('type', 'button')
+                    .attr('id', 'add-client')
+                    .attr('onclick', 'activateAddClient(this)')
+                    .attr('value', 'Add client')
+                    .addClass('btn btn-success admin-btn'))
+                .append($('<input/>')
+                    .attr('type', 'button')
+                    .attr('id', 'update-repair')
+                    .attr('value', 'Update Repair')
+                    .attr('onclick', 'activateUpdateRepair(this)')
+                    .addClass('btn btn-success admin-btn'))
+
+        })
+        $('div.jumbotron').fadeIn('fast');
+
+    }
+
+    var recievedRepairs;
+
+    function activateUpdateRepair(el) {
+        if ($('#update-repair-form').length) {
+            return;
+        }
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $(el).removeClass('btn-success').addClass('btn-danger');
+        if ($('form.myform').length) {
+            $('form.myform').remove();
+        }
+        $('div.jumbotron')
+            .append('<form class="myform" id="update-repair-form" method="post"></form>');
+        $('form.myform').append('<label for="sel-repair">Select repair to update</label>');
+        $('form.myform').append('<select class="form-control" id="sel-repair"> </select>');
+        $('#sel-repair').append('<option>----Select Repair----</option>');
+
+        $.ajax({
+            type: 'GET',
+            url: '/mechanic/get-repairs',
+            data: 'json',
+            success: function (repairs) {
+                recievedRepairs = repairs;
+                repairs.forEach(
+                    function (repair) {
+                        $('#sel-repair').append('<option value="' + repair.id + '">' + repair.client + ' ' +
+                            repair.carManufacturer + ' ' + repair.carModel + '</option>');
+                    }
+                );
+            }
+        });
+        $('#sel-repair').change(function () {
+            var id = $('#sel-repair').val();
+            var arrayLenght = recievedRepairs.length;
+            var index;
+            $('#repair-update-wrap').remove();
+            for (index in recievedRepairs) {
+                if (recievedRepairs[index].id == id) {
+                    $('form.myform').append('<div id="repair-update-wrap"></div>');
+                    $('#repair-update-wrap').append('<div class="form-group old-password">' +
+                        '<label for="description" th:text="|Add to description|"></label>' +
+                        '<textarea class="form-control" name="description" id="description" placeholder="Add statement to the description"></textarea>' +
+                        '</div>');
+                    $('#repair-update-wrap').append('<div class="form-group old-password">' +
+                        '<label for="isDone" th:text="|Repair finnished|"></label>' +
+                        ' <input type="checkbox" id="isDone" name="isDone" value="true"/>' +
+                        '</div>');
+                    $('#repair-update-wrap').append('<input class="btn btn-primary" id="add-repair-btn" type="button" onclick="updateRepair(' + id + ')" value="Update Repair" />')
+                    $('#repair-update-wrap').append('<input class="btn btn-primary admin-btn"  type="button" onclick="cancelUpdateRepair()" value="Cancel"/>')
+
+                    break;
+                }
+            }
+
+        })
+    }
+
+
+    function updateRepair(id) {
+
+        var updateRepair = {};
+        updateRepair.id = id;
+        updateRepair.description = $('#description').val();
+        updateRepair.isDone = $('#isDone').prop('checked');
+        $.ajax({
+            type: 'PUT',
+            url: '/mechanic/update-repair',
+            data: JSON.stringify(updateRepair),
+            contentType: 'application/json'
+        });
+
+        cancelUpdateRepair();
+    }
+
+    function cancelUpdateRepair() {
+        $('#update-repair-form').remove();
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+    }
+    function activateNewRepair(el) {
+        if ($('#repair-form').length) {
+            return;
+        }
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $(el).removeClass('btn-success').addClass('btn-danger');
+        if ($('form.myform').length) {
+            $('form.myform').remove();
+        }
+
+        $('div.jumbotron')
+            .append('<form class="myform" id="repair-form" method="post"></form>');
+        $('form.myform').append('<div class="form-group control-group">' +
+            '<label for="clientEmail" id="client-email-label" th:text="|Client Email|"></label>' +
+            '<input type="text" class="form-control" onchange="checkIfUserExists(this)" name="clientEmail" id="clientEmail" placeholder="Client email"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group">' +
+            '<label for="carManufacturer" th:text="|Car manufacturer|"></label>' +
+            '<input type="text" class="form-control" name="carManufacturer" id="carManufacturer" placeholder="Car manufacturer"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="carModel" th:text="|Car Model|"></label>' +
+            '<input type="text" class="form-control" name="carModel" id="carModel" placeholder="Car model"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="description" th:text="|Description|"></label>' +
+            '<textarea class="form-control" name="description" id="description" placeholder="Description of the repair"></textarea>' +
+            '</div>');
+        $('form.myform').append('<input class="btn btn-primary" id="add-repair-btn" type="button" onclick="addRepair()" value="Add Repair" disabled="disabled"/>')
+        $('form.myform').append('<input class="btn btn-primary admin-btn"  type="button" onclick="cancelAddRepair()" value="Cancel"/>')
+
+    }
+
+    function checkIfUserExists(el) {
+        var username = $(el).val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/mechanic/check-user',
+            data: username,
+            contentType: 'application/json',
+            statusCode: {
+                200: function (xhr) {
+                    $('#add-repair-btn').prop('disabled', false);
+                    $('#client-email-label')
+                        .css('color', 'black')
+                        .text('Client Email');
+                },
+                409: function (xhr) {
+                    $('#add-repair-btn').prop('disabled', true);
+                    $('#client-email-label')
+                        .css('color', 'red')
+                        .text('Client Email (There is no registered user with this eamil)');
+                }
+
+            }
+        });
+
+    }
+
+    function addRepair() {
+        var newRepair = {};
+
+        newRepair.clientEmail = $('#clientEmail').val();
+        newRepair.carManufacturer = $('#carManufacturer').val();
+        newRepair.carModel = $('#carModel').val();
+        newRepair.description = $('#description').val();
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/mechanic/add-repair',
+            data: JSON.stringify(newRepair),
+            dataType: 'json',
+            contentType: 'application/json',
+            statusCode: {
+                200: function () {
+                    cancelAddRepair();
+                    $('div.jumbotron').append(
+                        '<div class="alert alert-success" hidden="hidden" id="success-add">' +
+                        '<strong>Success!</strong> New repair for ' + newRepair.clientEmail + ' was added successfully!' +
+                        '</div>'
+                    );
+
+
+                    setTimeout(function () {
+                        $('#success-add').remove();
+                    }, 5000)
+
+                }
+            }
+
+        });
+    }
+
+    function cancelAddRepair() {
+        $('#repair-form').remove();
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+
+    }
+
+    function loadAdmin() {
+        $('div.jumbotron').fadeOut('fast', function () {
+            $('div.jumbotron').empty()
+                .append('<div id="admin-btns" class="container btn-container"></div>');
+
+            $('div.btn-container')
+                .append($('<input/>')
+                    .attr('type', 'button')
+                    .attr('id', 'add-admin')
+                    .attr('value', 'Add admin')
+                    .attr('onclick', 'activateAddAdmin(this)')
+                    .addClass('btn btn-success admin-btn'))
+                .append($('<input/>')
+                    .attr('type', 'button')
+                    .attr('id', 'add-mechanic')
+                    .attr('onclick', 'activateAddMechanic(this)')
+                    .attr('value', 'Add mechanic')
+                    .addClass('btn btn-success admin-btn'))
+
+        })
+        $('div.jumbotron').fadeIn('fast');
+    }
+
+    function activateAddMechanic(el) {
+        if ($('#mechanic-form').length) {
+            return;
+        }
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $(el).removeClass('btn-success').addClass('btn-danger');
+        if ($('form.myform').length) {
+            $('form.myform').remove();
+        }
+        $('div.jumbotron')
+            .append('<form class="myform" id="mechanic-form" method="post"></form>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="email" th:text="|Email|"></label>' +
+            '<input type="text" class="form-control" name="email" id="email" placeholder="Email"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="firstName" th:text="|First Name|"></label>' +
+            '<input type="text" class="form-control" name="firstName" id="firstName" placeholder="First Name"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="lastName" th:text="|Last Name|"></label>' +
+            '<input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last Name"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="password" th:text="|Password|"></label>' +
+            '<input type="password" class="form-control" name="password" id="password" placeholder="Password"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="confirmPassword" th:text="|Confirm Password|"></label>' +
+            '<input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="confirmPassword"/>' +
+            '</div>');
+        $('form.myform').append('<input class="btn btn-primary"  type="button" onclick="addMechanic()" value="Add Mechanic"/>')
+        $('form.myform').append('<input class="btn btn-primary admin-btn"  type="button" onclick="cancelAddMechanic()" value="Cancel"/>')
+
+    }
+
+    function addMechanic() {
+        var newMechanic = {};
+        newMechanic.username = $('#email').val();
+        newMechanic.firstName = $('#firstName').val();
+        newMechanic.lastName = $('#lastName').val();
+        newMechanic.password = $('#password').val();
+        newMechanic.confirmPassword = $('#confirmPassword').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/add-mechanic',
+            data: JSON.stringify(newMechanic),
+            dataType: 'json',
+            contentType: 'application/json'
+
+        });
+        cancelAddMechanic();
+    }
+
+    function cancelAddMechanic() {
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $('#mechanic-form').remove();
+    }
+
+    function activateAddAdmin(el) {
+
+        if ($('#admin-form').length) {
+            return;
+        }
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $(el).removeClass('btn-success').addClass('btn-danger');
+
+        if ($('form.myform').length) {
+            $('form.myform').remove();
+        }
+        $('div.jumbotron')
+            .append('<form class="myform" id="admin-form" method="post"></form>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="email" th:text="|Email|"></label>' +
+            '<input type="text" class="form-control" name="email" id="email" placeholder="Email"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="firstName" th:text="|First Name|"></label>' +
+            '<input type="text" class="form-control" name="firstName" id="firstName" placeholder="First Name"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="lastName" th:text="|Last Name|"></label>' +
+            '<input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last Name"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="password" th:text="|Password|"></label>' +
+            '<input type="password" class="form-control" name="password" id="password" placeholder="Password"/>' +
+            '</div>');
+        $('form.myform').append('<div class="form-group old-password">' +
+            '<label for="confirmPassword" th:text="|Confirm Password|"></label>' +
+            '<input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="confirmPassword"/>' +
+            '</div>');
+        $('form.myform').append('<input class="btn btn-primary"  type="button" onclick="addAdmin()" value="Add Admin"/>')
+        $('form.myform').append('<input class="btn btn-primary admin-btn"  type="button" onclick="cancelAddAdmin()" value="Cancel"/>')
+
+    }
+
+    function addAdmin() {
+        var newAdmin = {};
+        newAdmin.username = $('#email').val();
+        newAdmin.firstName = $('#firstName').val();
+        newAdmin.lastName = $('#lastName').val();
+        newAdmin.password = $('#password').val();
+        newAdmin.confirmPassword = $('#confirmPassword').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/add-admin',
+            data: JSON.stringify(newAdmin),
+            dataType: 'json',
+            contentType: 'application/json'
+
+        });
+        cancelAddAdmin();
+    }
+    function cancelAddAdmin() {
+        $('#admin-btns').find($('.btn-danger')).removeClass('btn-danger').addClass('btn-success');
+        $('#admin-form').remove();
+    }
+
+
+    function loadDOMChangePassword(responseStatus) {
+        $('div.jumbotron').fadeOut('fast', function () {
+            $('div.jumbotron').empty()
+                .append('<form class="myform" method="post"></form>');
+            if (responseStatus == 200) {
+                $('form.myform').append(
+                    '<div class="alert alert-success" role="alert">' +
+                    '<p>Password was changed successfully</p>' +
+                    '</div>')
+            } else if (responseStatus == 409) {
+                $('form.myform').append(
+                    '<div class="alert alert-danger" role="alert">' +
+                    '<p>Invalid password</p>' +
+                    '</div>')
+            }
+            $('form.myform').append('<div class="form-group old-password">' +
+                '<label for="oldPpassword" th:text="|Old password|"></label>' +
+                '<input type="password" class="form-control" name="password" id="oldPassword" placeholder="Old password"/>' +
+                '</div>');
+            $('form.myform').append('<div class="form-group old-password">' +
+                '<label for="newPpassword" th:text="|New password|"></label>' +
+                '<input type="password" class="form-control" name="password" id="newPassword" placeholder="New password"/>' +
+                '</div>');
+            $('form.myform').append('<div class="form-group old-password">' +
+                '<label for="confirmNewPpassword" th:text="|Confirm new password|"></label>' +
+                '<input type="password" class="form-control" name="password" id="confirmNewPassword" placeholder="Confirm new password"/>' +
+                '</div>');
+            $('form.myform').append('<input class="btn btn-primary"  type="button" onclick="changePassword(this)" value="Change password"/>')
+            $('div.jumbotron').fadeIn('fast');
+        })
+    }
+
+    function changePassword(el) {
+        var oldPassword = $('#oldPassword').val();
+        var newPassword = $('#newPassword').val();
+        var confirmNewPassword = $('#confirmNewPassword').val();
+        var data = {};
+        data.oldPassword = oldPassword;
+        data.newPassword = newPassword;
+        data.confirmNewPassword = confirmNewPassword;
+        $.ajax({
+            type: 'PUT',
+            url: '/profile/change-password',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            statusCode: {
+                200: function (xhr) {
+                    loadDOMChangePassword(200);
+                },
+                409: function (xhr) {
+                    loadDOMChangePassword(409);
+                }
+            }
+        });
+    }
+
+
+    function loadJSONProfile() {
+        if (firstName == null)
+            $.ajax({
+                type: 'GET',
+                url: '/user/getviewmodel',
+                data: 'json',
+                success: function (profile) {
+                    loadDOMProfile(profile);
+                }
+            });
+        else loadDOMProfile();
+    }
+
+    //save names after first call so there is no need to call ajax again
+    var firstName;
+    var lastName;
+
+    function loadDOMProfile(profile) {
+        if (firstName == null) {
+            firstName = profile.firstName;
+            lastName = profile.lastName;
+        }
+        $('div.jumbotron').fadeOut('fast', function () {
+            $('div.jumbotron').empty()
+                .append('<h1>' + 'Hello, ' + firstName + ' ' + lastName + '</h1>')
+                .append('<p>' + 'If you want to change your password or see your cars service history, ' +
+                    'navigate yourself to your desired option with the navbar on your left side.' + '</p>');
+            $('div.jumbotron').fadeIn('fast');
+        })
+    }
+
+    var repairs;
+
+    function loadUserRepairs() {
+        if (repairs == null)
+            $.ajax({
+                type: 'GET',
+                url: '/user/getrepairs',
+                data: 'json',
+                success: function (recievedRepairs) {
+                    loadDOMRepairs(recievedRepairs);
+                }
+            });
+        else loadDOMRepairs();
+    }
+    function loadDOMRepairs(repairsForUser) {
+        if (repairs == null) repairs = repairsForUser;
+        if (repairs.length == 0) {
+            $('div.jumbotron').fadeOut('fast', function () {
+                $('div.jumbotron').empty()
+                    .append('<p>' + 'Your current repair history is empty. When you get serviced from us you will se your' +
+                        ' repair history here.' + '</p>');
+                $('div.jumbotron').fadeIn('fast');
+            })
+        } else {
+            $('div.jumbotron').fadeOut('fast', function () {
+                $('div.jumbotron').empty()
+                    .append('<label for="repair-sel"> Select your repair</label>')
+                    .append('<select class="form-control" id="repair-sel"></select>');
+                $('#repair-sel').append('<option>----Select Repair----</option>');
+                repairs.forEach(function (repair) {
+                    $('#repair-sel').append('<option value="' + repair.id + '">'
+                        + repair.carManufacturer + ' ' + repair.carModel
+                        + ' ' + repair.description +
+                        '</option>');
+                })
+                $('div.jumbotron').fadeIn('fast');
+                $('#repair-sel').change(function () {
+                    $('#repair-content').remove();
+                    var id = $('#repair-sel').val();
+                    var voteButton = false;
+                    var index;
+                    for (index in repairs) {
+                        if (repairs[index].id == id) {
+                            var vote = repairs[index].voteState;
+                            switch (vote) {
+                                case -1:
+                                    vote = 'Your repair is not finnished yet!';
+                                    break;
+                                case 0:
+                                    vote = 'You have not voted for this repair, please vote.';
+                                    voteButton = true;
+                                    break;
+                                case 1:
+                                    vote = 'You have voted positive for this repair.';
+                                    break;
+                                case 2:
+                                    vote = 'You have voted negative for thsi repair';
+                                    break;
+                            }
+                            $('div.jumbotron').append('<div id="repair-content">' +
+                                '<p>Mechanic: ' + repairs[index].mechanicName + '</p>' +
+                                '<p>Car manufacturer: ' + repairs[index].carManufacturer + '</p>' +
+                                '<p>Car model: ' + repairs[index].carModel + '</p>' +
+                                '<p>Vote: ' + vote + '</p>' +
+                                '</div>');
+                            if (voteButton){
+                                $('#repair-content').append('<input class="btn btn-success"  type="button" onclick="upVote('+ id +')" value="I am satisfied"/>');
+                                $('#repair-content').append('<input class="btn btn-danger"  type="button" onclick="downVote('+ id +')" value="I am not satisfied"/>');
+                            }
+                            break;
+                        }
+                    }
+                })
+            })
+
+        }
+    }
+    function upVote(id) {
+        var repairVote = {};
+        repairVote.id = id;
+        repairVote.vote = true;
+        updateUserVote(repairVote);
+    }
+
+    function downVote(id){
+        var repairVote = {};
+        repairVote.id = id;
+        repairVote.vote = false;
+        updateUserVote(repairVote);
+    }
+
+    function updateUserVote(repairVote) {
+        $.ajax({
+            type: 'PUT',
+            url: '/user/update-repair',
+            data: JSON.stringify(repairVote),
+            contentType: 'application/json'
+        })
+        for (index in repairs) {
+            if (repairs[index].id == repairVote.id) {
+                if(repairVote.vote){
+                    repairs[index].voteState = 1;
+                }else{
+                    repairs[index].voteState = 2;
+                }
+            }
+        }
+        loadDOMRepairs();
+    }
+</script>
+
+
+<!-- Footer -->
+</body>
+
+</html>

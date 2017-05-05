@@ -1,0 +1,49 @@
+.myform{
+    margin-top: 9%;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+@media  (max-width:550px ) {
+    .myform{
+        margin-top: 15%;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+}
+
+@media (max-width:330px ) {
+    .myform{
+        margin-top: 33%;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-    input:focus {
+    border-color: rebeccapurple;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: -webkit-focus-ring-color rebeccapurple 5px;
+}
+
+
+.btn-primary{
+
+    background-color: #917099;
+    border-color: #917099;
+}
+
+.btn-primary:hover{
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+}
+
+.invalid-input{
+    margin-top:1%;
+    color: rebeccapurple;
+}
+
+.my-error{
+    border-color: red;
+}

@@ -1,0 +1,31 @@
+#success_message{ display: none;}
+
+.btn-service{
+
+    background-color: #917099;
+    border-color: #917099;
+    color:white;
+}
+
+.btn-service:hover{
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+    color: white;
+}
+
+.contact-form{
+    margin-top: 10%;
+
+}
+
+@media (max-width: 590px){
+    .contact-form{
+        margin-top: 14%;
+    }
+}
+
+@media (max-width: 400px){
+    .contact-form{
+        margin-top: 18%;
+    }
+}

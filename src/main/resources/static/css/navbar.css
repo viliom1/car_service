@@ -1,0 +1,11 @@
+.navbar{
+    background-color: #663399;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar-inverse .navbar-brand {
+    color: white;
+}

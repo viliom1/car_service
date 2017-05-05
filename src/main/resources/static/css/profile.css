@@ -1,0 +1,153 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+body {
+    overflow-x: hidden;
+}
+
+.profile-conetent {
+    margin-top: 6%;
+}
+
+a {
+    outline: 0;
+}
+
+/* Toggle Styles */
+
+ul li a.side-active {
+    background-color: rebeccapurple;
+    border-radius: 15px;
+    color: white;
+    -o-transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -ms-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 140px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: auto;
+    margin-left: -250px;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 140px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    height: 0;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 140px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 15px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #A647ED;
+    border-radius: 15px;
+    -o-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    -ms-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+.sidebar-nav li a:not(.side-active):hover {
+    text-decoration: none;
+    color: rebeccapurple;
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.btn-primary {
+
+    background-color: #917099;
+    border-color: #917099;
+}
+
+.btn-primary:hover {
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+}
+
+.btn-container{
+    margin-left: 20%;
+}
+.admin-btn {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+@media (min-width: 768px) {
+    #wrapper {
+        padding-left: 0;
+        height: auto;
+    }
+
+    #wrapper.toggled {
+        padding-left: 140px;
+    }
+
+    #sidebar-wrapper {
+        width: 0;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 140px;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}

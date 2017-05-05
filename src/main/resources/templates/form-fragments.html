@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<header th:fragment="register-head">
+    <form class="myform" method="post" th:object="${registerBinding}">
+        <div  class="form-group">
+            <label for="username" th:text="|e-mail|">Example label</label>
+            <input type="email" th:classappend="${#fields.hasErrors('username')} ? 'my-error'" th:field="*{username}" class="form-control" name="username" id="username" placeholder="e-mail"/>
+
+            <div th:if="${#fields.hasErrors('username') == true}" class="invalid-input" th:text="${#fields.errors('username').get(0)}"> </div>
+        </div>
+        <div class="form-group">
+            <label for="firstName" th:text="|first name|">Another label</label>
+            <input type="text"  th:classappend="${#fields.hasErrors('firstName')} ? 'my-error'" th:field="*{firstName}" class="form-control" name="firstName" id="firstName" placeholder="first name"/>
+            <div th:if="${#fields.hasErrors('firstName') == true}" class="invalid-input" th:text="${#fields.errors('firstName').get(0)}"> </div>
+        </div>
+        <div class="form-group">
+            <label for="lastName" th:text="|last name|">Another label</label>
+            <input  type="text" th:field="*{lastName}" class="form-control" th:classappend="${#fields.hasErrors('lastName')} ? 'my-error'" name="lastName" id="lastName" placeholder="last name"/>
+            <div th:if="${#fields.hasErrors('lastName') == true}" class="invalid-input" th:text="${#fields.errors('lastName').get(0)}"> </div>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="|password|">Another label</label>
+            <input type="password" th:field="*{password}" th:classappend="${#fields.hasErrors('password')} ? 'my-error'" class="form-control" name="password" id="password" placeholder="password"/>
+            <div th:if="${#fields.hasErrors('password') == true}" class="invalid-input" th:text="${#fields.errors('password').get(0)}"> </div>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword" th:text="|confirm password|">Another label</label>
+            <input type="password" th:field="*{confirmPassword}" class="form-control"  th:classappend="${#fields.hasErrors('global')} ? 'my-error'" name="confirmPassword" id="confirmPassword" placeholder="confirm password"/>
+            <div th:if="${#fields.hasErrors('global') == true}" class="invalid-input" th:text="${#fields.errors('global').get(0)}"> </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit"/>
+    </form>
+</header>
+
+<header th:fragment="login-head">
+    <form class="myform" method="post">
+        <div class="alert alert-danger" role="alert" th:if="${error} != null" th:text="${error}">
+            <strong>Oh snap!</strong> Change a few things up and try submitting again.
+        </div>
+        <div class="form-group">
+            <label for="username" th:text="|e-mail|">Example label</label>
+            <input type="username" name="username" class="form-control" id="username" placeholder="e-mail"/>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="|password|">Another label</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="password"/>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Log In"/>
+    </form>
+</header>
+</body>
+</html>

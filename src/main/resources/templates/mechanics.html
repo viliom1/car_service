@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title>2 Col Portfolio - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link href="css/mechanics.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/navbar.css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav th:replace="navbar::navbar"></nav>
+
+<!-- Page Content -->
+<div class="container mechanics-content">
+
+    <!-- Page Header -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" th:text="|Our mechanics|">Page Heading
+                <small th:text="|You can see them for yourself|">Secondary Text</small>
+            </h1>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Projects Row -->
+    <div class="row">
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="http://www.jobmail.co.za/blog/wp-content/uploads/2015/12/mechanic-on-the-job.jpg" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Petur Petrov|" href="#">Project One</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="http://www.kmbui.net/wp-content/uploads/2016/09/why_do_people_recommend_these_mechanics.jpg" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Georgi Goshov|" href="#">Project Two</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Projects Row -->
+    <div class="row">
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="http://garysautomotive.com/wp-content/uploads/2015/11/mechanic-business.jpg" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Photoshop Shopov|" href="#">Project Three</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="http://www.vtam.org/wp-content/uploads/2014/06/mechanics.jpg" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Ringo Starr|" href="#">Project Four</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Projects Row -->
+    <div class="row">
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="https://cdn.shopify.com/s/files/1/1286/0727/articles/car-mechanic_1632136c.jpg?v=1464408363" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Guzi Guzev|" href="#">Project Five</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+        <div class="col-md-6 portfolio-item">
+            <a href="#">
+                <img class="img-fluid" src="https://quitday.org/wp-content/uploads/2015/05/mechanics.jpg" alt=""/>
+            </a>
+            <h3>
+                <a class="mechanic-name" th:text="|Paul Walker|" href="#">Project Six</a>
+            </h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque
+                urna varius vitae.</p>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <hr/>
+
+    <!-- Pagination -->
+    <div class="row text-center">
+        <div class="col-lg-12">
+            <ul class="pagination">
+                <li>
+                    <a href="#">&laquo;</a>
+                </li>
+                <li class="active">
+                    <a href="#">1</a>
+                </li>
+                <li>
+                    <a href="#">2</a>
+                </li>
+                <li>
+                    <a href="#">3</a>
+                </li>
+                <li>
+                    <a href="#">4</a>
+                </li>
+                <li>
+                    <a href="#">5</a>
+                </li>
+                <li>
+                    <a href="#">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <hr/>
+
+    <!-- Footer -->
+    <footer th:replace="home::home-foot"></footer>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

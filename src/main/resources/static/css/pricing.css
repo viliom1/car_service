@@ -1,0 +1,35 @@
+.pricing{
+    margin-top: 6%;
+}
+
+
+@media (max-width: 750px) {
+    .pricing{
+        margin-top: 10%;
+    }
+}
+
+@media (max-width: 450px) {
+    .pricing{
+        margin-top: 15%;
+    }
+}
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+    background-color: #927699;
+    color: white;
+}
+
+.table-striped{
+    max-width: 80%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: rebeccapurple;
+    color: white;
+}
+
+.add-tab{
+    margin-left: 40%;
+}
